@@ -1,0 +1,32 @@
+#minesweeper td {
+    width: 4em;
+    height: 4em;
+    font-size: 2em;
+    border: 1px solid #000000;
+    vertical-align: middle;
+    text-align: center;
+    background-color: #DAD1D1;
+}
+
+#minesweeper td.cell-bomb {
+    background-color: #FF0000;
+}
+#minesweeper td.cell-0 {
+    color: #000000;
+}
+#minesweeper td.cell-1 {
+    color: #29C529;
+}
+#minesweeper td.cell-2 {
+    color: #FFFF00;
+}
+#minesweeper td.cell-3 {
+    color: #D39208;
+}
+#minesweeper td.cell-4,
+#minesweeper td.cell-5,
+#minesweeper td.cell-6,
+#minesweeper td.cell-7,
+#minesweeper td.cell-8 {
+    color: #FF0000;
+}
