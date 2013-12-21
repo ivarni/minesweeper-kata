@@ -43,7 +43,16 @@ Minefield.prototype.getRevealed = function() {
     return this.revealed;
 };
 Minefield.prototype.reveal = function(i, j) {
-    this.revealed[i][j] = true;
+    var self = this;
+    if (this.rows[i][j] === '*') {
+        this.rows.forEach(function(row, i) {
+            row.forEach(function(flag, j) {
+                self.revealed[i][j] = true;
+            });
+        });
+    } else {
+        this.revealed[i][j] = true;
+    }
 };
 Minefield.prototype.getClass = function(i, j) {
     var classes = [];

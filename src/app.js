@@ -26,7 +26,6 @@
     };
 
     render();
-    wrapper.innerHTML = '';
     wrapper.appendChild(table);
 
 }());

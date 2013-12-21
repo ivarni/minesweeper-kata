@@ -56,6 +56,16 @@ describe('revealing cells', function() {
         expect(row).toEqual([false, true, false]);
     });
 
+    it('reveals entire field if a bomb is found', function() {
+        var field = new Minefield(['***', '*.*', '***']);
+        field.reveal(0, 0);
+        var rows = field.getRevealed();
+        expect(rows.length).toBe(3);
+        rows.forEach(function(row) {
+            expect(row).toEqual([true, true, true]);
+        });
+    });
+
 });
 
 describe('when producing html', function() {
