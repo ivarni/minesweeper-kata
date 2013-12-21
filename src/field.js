@@ -1,7 +1,13 @@
 var Minefield = function(field) {
     var rows = this.rows = [];
+    var revealed = this.revealed = [];
     field.forEach(function(row) {
+        var tmp = [];
+        revealed.push(tmp);
         rows.push(row.split(''));
+        for (var i = 0, l = row.split('').length; i < l; i++) {
+            tmp.push(false);
+        }
     });
 };
 Minefield.prototype.numberOfMines = function(i, j) {
@@ -32,4 +38,22 @@ Minefield.prototype.getRows = function() {
         result.push(calculated);
     });
     return result;
+};
+Minefield.prototype.getRevealed = function() {
+    return this.revealed;
+};
+Minefield.prototype.reveal = function(i, j) {
+    this.revealed[i][j] = true;
+};
+Minefield.prototype.getClass = function(i, j) {
+    var classes = [];
+    if (this.rows[i][j] === '*') {
+        classes.push('cell-bomb');
+    } else {
+        classes.push('cell-' + this.getAdjacentCount(i, j));
+    }
+    if (!this.revealed[i][j]) {
+        classes.push('hidden');
+    }
+    return classes.join(' ');
 };

@@ -7,17 +7,26 @@
     var field = new Minefield(['.**..', '*....', '.....', '..*..', '*...*']);
     var rows = field.getRows();
 
-    rows.forEach(function(row) {
-        var tr = document.createElement('tr');
-        row.forEach(function(cell) {
-            var td = document.createElement('td');
-            td.innerHTML = cell;
-            td.setAttribute('class', 'cell-' + (cell === '*' ? 'bomb' : cell));
-            tr.appendChild(td);
+    var render = function() {
+        table.innerHTML = '';
+        rows.forEach(function(row, i) {
+            var tr = document.createElement('tr');
+            row.forEach(function(cell, j) {
+                var td = document.createElement('td');
+                td.innerHTML = cell;
+                td.setAttribute('class', field.getClass(i, j));
+                td.addEventListener('click', function() {
+                    field.reveal(i, j);
+                    render();
+                });
+                tr.appendChild(td);
+            });
+            table.appendChild(tr);
         });
-        table.appendChild(tr);
-    });
+    };
 
+    render();
+    wrapper.innerHTML = '';
     wrapper.appendChild(table);
 
 }());

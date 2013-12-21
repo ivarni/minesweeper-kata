@@ -6,6 +6,9 @@ module.exports = function(config) {
             'src/**/*.js',
             'test/unit/**/*.spec.js'
         ],
+        exclude: [
+            '**/app.js'
+        ],
         reporters: ['progress', 'growl'],
         port: 9876,
         colors: true,
