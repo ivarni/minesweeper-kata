@@ -11,6 +11,9 @@
 #minesweeper td.cell-bomb {
     background-color: #FF0000;
 }
+#minesweeper td.cell-bomb.revealed {
+    background-color: #00FF00;
+}
 #minesweeper td.hidden.cell-bomb {
     background-color: #DAD1D1;
 }

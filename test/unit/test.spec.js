@@ -74,6 +74,19 @@ describe('revealing cells', function() {
         expect(field.rows[1][1].revealed).toBe(true);
     });
 
+    it('ends the game when only bombs remain unrevealed', function() {
+        var field = new Minefield(['..*', '***', '***']);
+        field.reveal(0, 0);
+        expect(field.solved).toBe(false);
+        field.reveal(0, 1);
+        expect(field.solved).toBe(true);
+        field.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                expect(cell.revealed).toBe(true);
+            });
+        });        
+    });
+
 });
 
 describe('when marking cellls', function() {
@@ -110,8 +123,8 @@ describe('when producing html', function() {
         expect(field.getClass(0, 0)).toContain('cell-bomb');
     });
 
-    it('produces the revealed class if cell is revealed', function() {
-        var field = new Minefield(['.', '*']);
+    it('produces the hidden class if cell is not revealed', function() {
+        var field = new Minefield(['..', '*.']);
         field.reveal(0, 0);
         expect(field.getClass(0, 0)).not.toContain('hidden');
         expect(field.getClass(1, 0)).toContain('hidden');
@@ -122,6 +135,12 @@ describe('when producing html', function() {
         field.mark(0, 0);
         expect(field.getClass(0, 0)).toContain('marked');
         expect(field.getClass(1, 0)).not.toContain('marked');
+    });
+
+    it('produces the revaled class for confirmed bombs', function() {
+        var field = new Minefield(['.', '*']);
+        field.reveal(0, 0);
+        expect(field.getClass(1, 0)).toContain('revealed');
     });
 
 });

@@ -9,6 +9,7 @@ var Minefield = function(field) {
             return new Cell(value);
         });
     });
+    this.solved = false;
 };
 Minefield.prototype.numberOfMines = function(i, j) {
     return this.rows[i] && this.rows[i][j] && this.rows[i][j].value === '*' ? 1 : 0;
@@ -61,11 +62,30 @@ Minefield.prototype.reveal = function(i, j) {
             this.reveal(i - 1, j + 1);
         }
     }
+    var solved = true;
+    this.rows.forEach(function(row) {
+        row.forEach(function(cell) {
+            if (!cell.revealed && cell.value !== '*') {
+                solved = false;
+            }
+        });
+    });
+    this.solved = solved;
+    if (solved) {
+        this.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                cell.revealed = true;
+            });
+        });        
+    }
 };
 Minefield.prototype.getClass = function(i, j) {
     var classes = [];
     if (this.rows[i][j].value === '*') {
         classes.push('cell-bomb');
+        if (this.solved) {
+            classes.push('revealed');
+        }
     } else {
         classes.push('cell-' + this.getAdjacentCount(i, j));
     }
