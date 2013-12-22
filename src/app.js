@@ -15,9 +15,15 @@
                 var td = document.createElement('td');
                 td.innerHTML = cell;
                 td.setAttribute('class', field.getClass(i, j));
-                td.addEventListener('click', function() {
-                    field.reveal(i, j);
-                    render();
+                td.addEventListener('click', function(event) {
+                    var clazz = event.target.getAttribute('class');
+                    if (event.ctrlKey) {
+                        field.mark(i, j);
+                        render();
+                    } else if (!field.rows[i][j].marked) {
+                        field.reveal(i, j);
+                        render();
+                    }
                 });
                 tr.appendChild(td);
             });

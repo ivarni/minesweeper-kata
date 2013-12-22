@@ -1,11 +1,12 @@
-var Cell = function(value, revealed) {
+var Cell = function(value) {
     this.value = value;
-    this.revealed = revealed;
+    this.revealed = false;
+    this.marked = false;
 };
 var Minefield = function(field) {
     this.rows = field.map(function(row) {
         return row.split('').map(function(value) {
-            return new Cell(value, false);
+            return new Cell(value);
         });
     });
 };
@@ -33,6 +34,9 @@ Minefield.prototype.getRows = function() {
             return (cell.value === '*') ? cell.value : self.getAdjacentCount(i, j);
         });
     });
+};
+Minefield.prototype.mark = function(i, j) {
+    this.rows[i][j].marked = !this.rows[i][j].marked;
 };
 Minefield.prototype.reveal = function(i, j) {
     if (!this.rows[i] || !this.rows[i][j] || this.rows[i][j].revealed) {
@@ -67,6 +71,9 @@ Minefield.prototype.getClass = function(i, j) {
     }
     if (!this.rows[i][j].revealed) {
         classes.push('hidden');
+    }
+    if (this.rows[i][j].marked) {
+        classes.push('marked');
     }
     return classes.join(' ');
 };

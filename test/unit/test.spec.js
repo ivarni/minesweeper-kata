@@ -49,7 +49,7 @@ describe('revealing cells', function() {
         });
     });
 
-    it('marks a cell as revealed', function() {
+    it('flags a cell as revealed', function() {
         var field = new Minefield(['***', '*.*', '***']);
         field.reveal(1, 1);
         expect(field.rows[1][1].revealed).toBe(true);
@@ -76,6 +76,32 @@ describe('revealing cells', function() {
 
 });
 
+describe('when marking cellls', function() {
+
+    it('initalizes all fields to unmarked', function() {
+        var field = new Minefield(['*..', '...', '*.*']);
+        field.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                expect(cell.marked).toBe(false);
+            });
+        });
+    });
+
+    it('flags a field as marked', function() {
+        var field = new Minefield(['*..', '...', '*.*']);
+        field.mark(0, 0);
+        expect(field.rows[0][0].marked).toBe(true);
+    });
+
+    it('flags a marked field as unmarked', function() {
+        var field = new Minefield(['*..', '...', '*.*']);
+        field.mark(0, 0);
+        field.mark(0, 0);
+        expect(field.rows[0][0].marked).toBe(false);
+    });
+
+});
+
 describe('when producing html', function() {
 
     it('produces the right cell-class', function() {
@@ -89,6 +115,13 @@ describe('when producing html', function() {
         field.reveal(0, 0);
         expect(field.getClass(0, 0)).not.toContain('hidden');
         expect(field.getClass(1, 0)).toContain('hidden');
+    });
+
+    it('produces the marked class if cell is marked', function() {
+        var field = new Minefield(['.', '*']);
+        field.mark(0, 0);
+        expect(field.getClass(0, 0)).toContain('marked');
+        expect(field.getClass(1, 0)).not.toContain('marked');
     });
 
 });
