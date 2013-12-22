@@ -49,6 +49,7 @@ Minefield.prototype.reveal = function(i, j) {
                 cell.revealed = true;
             });
         });
+        return;
     } else {
         this.rows[i][j].revealed = true;
         if (this.getRows()[i][j] === 0) {
