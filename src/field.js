@@ -35,6 +35,9 @@ Minefield.prototype.getRows = function() {
     });
 };
 Minefield.prototype.reveal = function(i, j) {
+    if (!this.rows[i] || !this.rows[i][j] || this.rows[i][j].revealed) {
+        return;
+    }
     if (this.rows[i][j].value === '*') {
         this.rows.forEach(function(row) {
             row.forEach(function(cell) {
@@ -43,6 +46,16 @@ Minefield.prototype.reveal = function(i, j) {
         });
     } else {
         this.rows[i][j].revealed = true;
+        if (this.getRows()[i][j] === 0) {
+            this.reveal(i + 1, j - 1);
+            this.reveal(i + 1, j);
+            this.reveal(i + 1, j + 1);
+            this.reveal(i, j - 1);
+            this.reveal(i, j + 1);
+            this.reveal(i - 1, j - 1);
+            this.reveal(i - 1, j);
+            this.reveal(i - 1, j + 1);
+        }
     }
 };
 Minefield.prototype.getClass = function(i, j) {

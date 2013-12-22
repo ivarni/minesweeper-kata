@@ -65,6 +65,15 @@ describe('revealing cells', function() {
         });
     });
 
+    it('reveals neighbouring cells when a 0-cell is revealed', function() {
+        var field = new Minefield(['...', '..*', '***']);
+        field.reveal(0, 0);
+        expect(field.rows[0][0].revealed).toBe(true);
+        expect(field.rows[0][1].revealed).toBe(true);
+        expect(field.rows[1][0].revealed).toBe(true);
+        expect(field.rows[1][1].revealed).toBe(true);
+    });
+
 });
 
 describe('when producing html', function() {
@@ -76,7 +85,7 @@ describe('when producing html', function() {
     });
 
     it('produces the revealed class if cell is revealed', function() {
-        var field = new Minefield(['.', '.']);
+        var field = new Minefield(['.', '*']);
         field.reveal(0, 0);
         expect(field.getClass(0, 0)).not.toContain('hidden');
         expect(field.getClass(1, 0)).toContain('hidden');
