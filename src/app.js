@@ -4,7 +4,7 @@
     
     var table = document.createElement('table');
 
-    var field = new Minefield(['.**..', '*....', '.....', '..*..', '*...*']);
+    var field = new Minefield(['***..', '.....', '.....', '..*..', '*...*']);
     var rows = field.getRows();
 
     var render = function() {
