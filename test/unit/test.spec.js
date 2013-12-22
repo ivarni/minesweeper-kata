@@ -42,27 +42,26 @@ describe('revealing cells', function() {
 
     it('initalizes all fields to hidden', function() {
         var field = new Minefield(['***', '*.*', '***']);
-        var rows = field.getRevealed();
-        expect(rows.length).toBe(3);
-        rows.forEach(function(row) {
-            expect(row).toEqual([false, false, false]);
+        field.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                expect(cell.revealed).toBe(false);
+            });
         });
     });
 
-    it('marks a cell as revaled', function() {
+    it('marks a cell as revealed', function() {
         var field = new Minefield(['***', '*.*', '***']);
         field.reveal(1, 1);
-        var row = field.getRevealed()[1];
-        expect(row).toEqual([false, true, false]);
+        expect(field.rows[1][1].revealed).toBe(true);
     });
 
     it('reveals entire field if a bomb is found', function() {
         var field = new Minefield(['***', '*.*', '***']);
         field.reveal(0, 0);
-        var rows = field.getRevealed();
-        expect(rows.length).toBe(3);
-        rows.forEach(function(row) {
-            expect(row).toEqual([true, true, true]);
+        field.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                expect(cell.revealed).toBe(true);
+            });
         });
     });
 

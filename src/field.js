@@ -1,67 +1,58 @@
+var Cell = function(value, revealed) {
+    this.value = value;
+    this.revealed = revealed;
+};
 var Minefield = function(field) {
-    var rows = this.rows = [];
-    var revealed = this.revealed = [];
-    field.forEach(function(row) {
-        var tmp = [];
-        revealed.push(tmp);
-        rows.push(row.split(''));
-        for (var i = 0, l = row.split('').length; i < l; i++) {
-            tmp.push(false);
-        }
+    this.rows = field.map(function(row) {
+        return row.split('').map(function(value) {
+            return new Cell(value, false);
+        });
     });
 };
 Minefield.prototype.numberOfMines = function(i, j) {
-    return this.rows[i] && this.rows[i][j] === '*' ? 1 : 0;
+    return this.rows[i] && this.rows[i][j] && this.rows[i][j].value === '*' ? 1 : 0;
 };
 Minefield.prototype.getAdjacentCount = function(i, j) {
-    return this.numberOfMines(i, j - 1) +
-        this.numberOfMines(i, j + 1) +
-        this.numberOfMines(i + 1, j - 1) +
-        this.numberOfMines(i + 1, j) +
-        this.numberOfMines(i + 1, j + 1) +
-        this.numberOfMines(i - 1, j - 1) +
-        this.numberOfMines(i - 1, j) +
-        this.numberOfMines(i - 1, j + 1);
+    return [
+        this.numberOfMines(i + 1, j - 1),
+        this.numberOfMines(i + 1, j),
+        this.numberOfMines(i + 1, j + 1),
+        this.numberOfMines(i, j - 1),
+        this.numberOfMines(i, j + 1),
+        this.numberOfMines(i - 1, j - 1),
+        this.numberOfMines(i - 1, j),
+        this.numberOfMines(i - 1, j + 1)
+    ].reduce(function(a, b) {
+        return a + b;
+    });
 };
 Minefield.prototype.getRows = function() {
     var self = this;
-    var result = [];
-    this.rows.forEach(function(row, i) {
-        var calculated = [];
-        row.forEach(function(cell, j) {
-            if (cell === '*') {
-                calculated.push(cell);
-            } else {
-                calculated.push(self.getAdjacentCount(i, j));
-            }
+    return this.rows.map(function(row, i) {
+        return row.map(function(cell, j) {
+            return (cell.value === '*') ? cell.value : self.getAdjacentCount(i, j);
         });
-        result.push(calculated);
     });
-    return result;
-};
-Minefield.prototype.getRevealed = function() {
-    return this.revealed;
 };
 Minefield.prototype.reveal = function(i, j) {
-    var self = this;
-    if (this.rows[i][j] === '*') {
-        this.rows.forEach(function(row, i) {
-            row.forEach(function(flag, j) {
-                self.revealed[i][j] = true;
+    if (this.rows[i][j].value === '*') {
+        this.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                cell.revealed = true;
             });
         });
     } else {
-        this.revealed[i][j] = true;
+        this.rows[i][j].revealed = true;
     }
 };
 Minefield.prototype.getClass = function(i, j) {
     var classes = [];
-    if (this.rows[i][j] === '*') {
+    if (this.rows[i][j].value === '*') {
         classes.push('cell-bomb');
     } else {
         classes.push('cell-' + this.getAdjacentCount(i, j));
     }
-    if (!this.revealed[i][j]) {
+    if (!this.rows[i][j].revealed) {
         classes.push('hidden');
     }
     return classes.join(' ');
