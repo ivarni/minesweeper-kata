@@ -16,7 +16,6 @@
                 td.innerHTML = cell;
                 td.setAttribute('class', field.getClass(i, j));
                 td.addEventListener('click', function(event) {
-                    var clazz = event.target.getAttribute('class');
                     if (event.ctrlKey) {
                         field.mark(i, j);
                         render();
