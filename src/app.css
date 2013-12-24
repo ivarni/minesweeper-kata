@@ -11,8 +11,11 @@
 #minesweeper td.cell-bomb {
     background-color: #FF0000;
 }
-#minesweeper td.cell-bomb.revealed {
+#minesweeper td.cell-bomb.confirmed,
+#minesweeper td.cell-bomb.hidden.confirmed,
+#minesweeper td.cell-bomb.marked.confirmed {
     background-color: #00FF00;
+    color: black;
 }
 #minesweeper td.hidden.cell-bomb {
     background-color: #DAD1D1;

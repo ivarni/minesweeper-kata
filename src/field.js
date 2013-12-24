@@ -11,20 +11,26 @@ var Minefield = function(field) {
     });
     this.solved = false;
 };
+Minefield.prototype.neighbourCoords = function(i, j) {
+    return [
+        { i: i + 1, j: j - 1},
+        { i: i + 1, j: j},
+        { i: i + 1, j: j + 1},
+        { i: i, j: j - 1},
+        { i: i, j: j + 1},
+        { i: i - 1, j: j - 1},
+        { i: i - 1, j: j},
+        { i: i - 1, j: j + 1}
+    ];
+};
 Minefield.prototype.numberOfMines = function(i, j) {
     return this.rows[i] && this.rows[i][j] && this.rows[i][j].value === '*' ? 1 : 0;
 };
 Minefield.prototype.getAdjacentCount = function(i, j) {
-    return [
-        this.numberOfMines(i + 1, j - 1),
-        this.numberOfMines(i + 1, j),
-        this.numberOfMines(i + 1, j + 1),
-        this.numberOfMines(i, j - 1),
-        this.numberOfMines(i, j + 1),
-        this.numberOfMines(i - 1, j - 1),
-        this.numberOfMines(i - 1, j),
-        this.numberOfMines(i - 1, j + 1)
-    ].reduce(function(a, b) {
+    var self = this;
+    return this.neighbourCoords(i, j).map(function(coords) {
+        return self.numberOfMines(coords.i, coords.j);
+    }).reduce(function(a, b) {
         return a + b;
     });
 };
@@ -39,53 +45,51 @@ Minefield.prototype.getRows = function() {
 Minefield.prototype.mark = function(i, j) {
     this.rows[i][j].marked = !this.rows[i][j].marked;
 };
+Minefield.prototype.revealAll = function() {
+    this.rows.forEach(function(row) {
+        row.forEach(function(cell) {
+            cell.revealed = true;
+        });
+    });    
+};
+Minefield.prototype.revealMines = function() {
+    this.rows.forEach(function(row) {
+        row.forEach(function(cell) {
+            if (cell.value === '*') {
+                cell.revealed = true;
+            }
+        });
+    });    
+};
+Minefield.prototype.isSolved = function() {
+    return this.rows.every(function(row) {
+        return row.every(function(cell) {
+            return (cell.revealed || cell.value === '*');
+        });
+    });
+};
 Minefield.prototype.reveal = function(i, j) {
     if (!this.rows[i] || !this.rows[i][j] || this.rows[i][j].revealed) {
         return;
     }
     if (this.rows[i][j].value === '*') {
-        this.rows.forEach(function(row) {
-            row.forEach(function(cell) {
-                cell.revealed = true;
-            });
-        });
-        return;
+        return this.revealMines();
     } else {
         this.rows[i][j].revealed = true;
         if (this.getRows()[i][j] === 0) {
-            this.reveal(i + 1, j - 1);
-            this.reveal(i + 1, j);
-            this.reveal(i + 1, j + 1);
-            this.reveal(i, j - 1);
-            this.reveal(i, j + 1);
-            this.reveal(i - 1, j - 1);
-            this.reveal(i - 1, j);
-            this.reveal(i - 1, j + 1);
-        }
-    }
-    var solved = true;
-    this.rows.forEach(function(row) {
-        row.forEach(function(cell) {
-            if (!cell.revealed && cell.value !== '*') {
-                solved = false;
-            }
-        });
-    });
-    this.solved = solved;
-    if (solved) {
-        this.rows.forEach(function(row) {
-            row.forEach(function(cell) {
-                cell.revealed = true;
+            var self = this;
+            this.neighbourCoords(i, j).forEach(function(coords) {
+                self.reveal(coords.i, coords.j);
             });
-        });        
-    }
+        }
+    }  
 };
 Minefield.prototype.getClass = function(i, j) {
     var classes = [];
     if (this.rows[i][j].value === '*') {
         classes.push('cell-bomb');
-        if (this.solved) {
-            classes.push('revealed');
+        if (this.isSolved()) {
+            classes.push('confirmed');
         }
     } else {
         classes.push('cell-' + this.getAdjacentCount(i, j));

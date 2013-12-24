@@ -55,14 +55,18 @@ describe('revealing cells', function() {
         expect(field.rows[1][1].revealed).toBe(true);
     });
 
-    it('reveals entire field if a bomb is found', function() {
-        var field = new Minefield(['***', '*.*', '***']);
+    it('reveals all mines if a mine is found', function() {
+        var field = new Minefield(['*..', '..*', '...']);
         field.reveal(0, 0);
-        field.rows.forEach(function(row) {
-            row.forEach(function(cell) {
-                expect(cell.revealed).toBe(true);
-            });
-        });
+        expect(field.rows[0][0].revealed).toBe(true);
+        expect(field.rows[0][1].revealed).toBe(false);
+        expect(field.rows[0][2].revealed).toBe(false);
+        expect(field.rows[1][0].revealed).toBe(false);
+        expect(field.rows[1][1].revealed).toBe(false);
+        expect(field.rows[1][2].revealed).toBe(true);
+        expect(field.rows[2][0].revealed).toBe(false);
+        expect(field.rows[2][1].revealed).toBe(false);
+        expect(field.rows[2][2].revealed).toBe(false);
     });
 
     it('reveals neighbouring cells when a 0-cell is revealed', function() {
@@ -77,14 +81,9 @@ describe('revealing cells', function() {
     it('ends the game when only bombs remain unrevealed', function() {
         var field = new Minefield(['..*', '***', '***']);
         field.reveal(0, 0);
-        expect(field.solved).toBe(false);
+        expect(field.isSolved()).toBe(false);
         field.reveal(0, 1);
-        expect(field.solved).toBe(true);
-        field.rows.forEach(function(row) {
-            row.forEach(function(cell) {
-                expect(cell.revealed).toBe(true);
-            });
-        });        
+        expect(field.isSolved()).toBe(true);
     });
 
 });
@@ -137,10 +136,10 @@ describe('when producing html', function() {
         expect(field.getClass(1, 0)).not.toContain('marked');
     });
 
-    it('produces the revaled class for confirmed bombs', function() {
+    it('produces the confirmed class for confirmed bombs', function() {
         var field = new Minefield(['.', '*']);
         field.reveal(0, 0);
-        expect(field.getClass(1, 0)).toContain('revealed');
+        expect(field.getClass(1, 0)).toContain('confirmed');
     });
 
 });
