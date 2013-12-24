@@ -55,18 +55,14 @@ describe('revealing cells', function() {
         expect(field.rows[1][1].revealed).toBe(true);
     });
 
-    it('reveals all mines if a mine is found', function() {
+    it('reveals all cells if a mine is found', function() {
         var field = new Minefield(['*..', '..*', '...']);
         field.reveal(0, 0);
-        expect(field.rows[0][0].revealed).toBe(true);
-        expect(field.rows[0][1].revealed).toBe(false);
-        expect(field.rows[0][2].revealed).toBe(false);
-        expect(field.rows[1][0].revealed).toBe(false);
-        expect(field.rows[1][1].revealed).toBe(false);
-        expect(field.rows[1][2].revealed).toBe(true);
-        expect(field.rows[2][0].revealed).toBe(false);
-        expect(field.rows[2][1].revealed).toBe(false);
-        expect(field.rows[2][2].revealed).toBe(false);
+        field.rows.forEach(function(row) {
+            row.forEach(function(cell) {
+                expect(cell.revealed).toBe(true);
+            });
+        });
     });
 
     it('reveals neighbouring cells when a 0-cell is revealed', function() {
@@ -140,6 +136,12 @@ describe('when producing html', function() {
         var field = new Minefield(['.', '*']);
         field.reveal(0, 0);
         expect(field.getClass(1, 0)).toContain('confirmed');
+    });
+
+    it('does not produce the confirmed class if the game is lost', function() {
+        var field = new Minefield(['.', '*']);
+        field.reveal(1, 0);
+        expect(field.getClass(1, 0)).not.toContain('confirmed');
     });
 
 });

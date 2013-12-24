@@ -9,7 +9,7 @@ var Minefield = function(field) {
             return new Cell(value);
         });
     });
-    this.solved = false;
+    this.lost = false;
 };
 Minefield.prototype.neighbourCoords = function(i, j) {
     return [
@@ -52,17 +52,8 @@ Minefield.prototype.revealAll = function() {
         });
     });    
 };
-Minefield.prototype.revealMines = function() {
-    this.rows.forEach(function(row) {
-        row.forEach(function(cell) {
-            if (cell.value === '*') {
-                cell.revealed = true;
-            }
-        });
-    });    
-};
 Minefield.prototype.isSolved = function() {
-    return this.rows.every(function(row) {
+    return !this.lost && this.rows.every(function(row) {
         return row.every(function(cell) {
             return (cell.revealed || cell.value === '*');
         });
@@ -73,7 +64,8 @@ Minefield.prototype.reveal = function(i, j) {
         return;
     }
     if (this.rows[i][j].value === '*') {
-        return this.revealMines();
+        this.lost = true;
+        return this.revealAll();
     } else {
         this.rows[i][j].revealed = true;
         if (this.getRows()[i][j] === 0) {
