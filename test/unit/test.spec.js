@@ -6,31 +6,31 @@ describe('Calculating the field', function() {
         expect(row).toEqual([0, 0, 0]);
     });
 
-    it('returns a row with one mine', function() {
+    xit('returns a row with one mine', function() {
         var field = new Minefield(['*']);
         var row = field.getRows()[0];
         expect(row).toEqual(['*']);
     });
 
-    it('counts one adjacent mine', function() {
+    xit('counts one adjacent mine', function() {
         var field = new Minefield(['*..']);
         var row = field.getRows()[0];
         expect(row).toEqual(['*', 1, 0]);
     });
 
-    it('counts two adjacent mines', function() {
+    xit('counts two adjacent mines', function() {
         var field = new Minefield(['*.*']);
         var row = field.getRows()[0];
         expect(row).toEqual(['*', 2, '*']);
     });
 
-    it('counts vertical mines', function() {
+    xit('counts vertical mines', function() {
         var field = new Minefield(['*', '.']);
         var row = field.getRows()[1];
         expect(row).toEqual([1]);
     });
 
-    it('counts surrounding mines', function() {
+    xit('counts surrounding mines', function() {
         var field = new Minefield(['***', '*.*', '***']);
         var row = field.getRows()[1];
         expect(row).toEqual(['*', 8, '*']);
@@ -40,7 +40,7 @@ describe('Calculating the field', function() {
 
 describe('revealing cells', function() {
 
-    it('initalizes all fields to hidden', function() {
+    xit('initalizes all fields to hidden', function() {
         var field = new Minefield(['***', '*.*', '***']);
         field.rows.forEach(function(row) {
             row.forEach(function(cell) {
@@ -49,13 +49,13 @@ describe('revealing cells', function() {
         });
     });
 
-    it('flags a cell as revealed', function() {
+    xit('flags a cell as revealed', function() {
         var field = new Minefield(['***', '*.*', '***']);
         field.reveal(1, 1);
         expect(field.rows[1][1].revealed).toBe(true);
     });
 
-    it('reveals all cells if a mine is found', function() {
+    xit('reveals all cells if a mine is found', function() {
         var field = new Minefield(['*..', '..*', '...']);
         field.reveal(0, 0);
         field.rows.forEach(function(row) {
@@ -65,7 +65,7 @@ describe('revealing cells', function() {
         });
     });
 
-    it('reveals neighbouring cells when a 0-cell is revealed', function() {
+    xit('reveals neighbouring cells when a 0-cell is revealed', function() {
         var field = new Minefield(['...', '..*', '***']);
         field.reveal(0, 0);
         expect(field.rows[0][0].revealed).toBe(true);
@@ -74,7 +74,7 @@ describe('revealing cells', function() {
         expect(field.rows[1][1].revealed).toBe(true);
     });
 
-    it('ends the game when only bombs remain unrevealed', function() {
+    xit('ends the game when only bombs remain unrevealed', function() {
         var field = new Minefield(['..*', '***', '***']);
         field.reveal(0, 0);
         expect(field.isSolved()).toBe(false);
@@ -86,7 +86,7 @@ describe('revealing cells', function() {
 
 describe('when marking cellls', function() {
 
-    it('initalizes all fields to unmarked', function() {
+    xit('initalizes all fields to unmarked', function() {
         var field = new Minefield(['*..', '...', '*.*']);
         field.rows.forEach(function(row) {
             row.forEach(function(cell) {
@@ -95,13 +95,13 @@ describe('when marking cellls', function() {
         });
     });
 
-    it('flags a field as marked', function() {
+    xit('flags a field as marked', function() {
         var field = new Minefield(['*..', '...', '*.*']);
         field.mark(0, 0);
         expect(field.rows[0][0].marked).toBe(true);
     });
 
-    it('flags a marked field as unmarked', function() {
+    xit('flags a marked field as unmarked', function() {
         var field = new Minefield(['*..', '...', '*.*']);
         field.mark(0, 0);
         field.mark(0, 0);
@@ -112,33 +112,33 @@ describe('when marking cellls', function() {
 
 describe('when producing html', function() {
 
-    it('produces the right cell-class', function() {
+    xit('produces the right cell-class', function() {
         var field = new Minefield(['*', '.']);
         expect(field.getClass(1, 0)).toContain('cell-1');
         expect(field.getClass(0, 0)).toContain('cell-bomb');
     });
 
-    it('produces the hidden class if cell is not revealed', function() {
+    xit('produces the hidden class if cell is not revealed', function() {
         var field = new Minefield(['..', '*.']);
         field.reveal(0, 0);
         expect(field.getClass(0, 0)).not.toContain('hidden');
         expect(field.getClass(1, 0)).toContain('hidden');
     });
 
-    it('produces the marked class if cell is marked', function() {
+    xit('produces the marked class if cell is marked', function() {
         var field = new Minefield(['.', '*']);
         field.mark(0, 0);
         expect(field.getClass(0, 0)).toContain('marked');
         expect(field.getClass(1, 0)).not.toContain('marked');
     });
 
-    it('produces the confirmed class for confirmed bombs', function() {
+    xit('produces the confirmed class for confirmed bombs', function() {
         var field = new Minefield(['.', '*']);
         field.reveal(0, 0);
         expect(field.getClass(1, 0)).toContain('confirmed');
     });
 
-    it('does not produce the confirmed class if the game is lost', function() {
+    xit('does not produce the confirmed class if the game is lost', function() {
         var field = new Minefield(['.', '*']);
         field.reveal(1, 0);
         expect(field.getClass(1, 0)).not.toContain('confirmed');
